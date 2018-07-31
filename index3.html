@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>图片预加载有序加载</title>
+	<style>
+		html, body{
+			height: 100%;
+			background-color: pink;
+		}
+		a{
+			text-decoration: none;
+		}
+		.box{
+			text-align:center;
+		}
+		.btn{
+			display: inline-block;
+			height: 30px;
+			line-height: 30px;
+			border: 1px solid #ccc;
+			background-color: #fff;
+			padding: 0 10px;
+			margin-right: 50px;
+			color: #333;
+		}
+		.btn:hover{
+			background-color: #eee;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<img src="https://img1.doubanio.com/view/photo/m/public/p2522963679.webp" alt="pic" id="img" width="346.8"/>
+		<p>
+			<a href="javascript:;" class="btn" data-control="prev">上一页</a>
+			<a href="javascript:;" class="btn" data-control="next">下一页</a>
+		</p>
+	</div>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/preload.js"></script>
+	<script>
+		var imgs = [
+			'https://img3.doubanio.com/view/photo/m/public/p2525704440.webp',
+			'https://img3.doubanio.com/view/photo/m/public/p2525704761.webp',
+			'https://img1.doubanio.com/view/photo/m/public/p2525703309.webp',
+			'https://img1.doubanio.com/view/photo/m/public/p2522116209.webp',
+			'https://img3.doubanio.com/view/photo/m/public/p2522963314.webp',
+			'https://img3.doubanio.com/view/photo/m/public/p2522963821.webp',
+			'https://img3.doubanio.com/view/photo/m/public/p2522963810.webp',
+			'https://img1.doubanio.com/view/photo/m/public/p2522963749.webp'
+		];
+		var len = imgs.length,
+		    count = 0,
+		    index = 0;
+
+		//有序预加载，可封装
+		/*function load() {
+			var imgObj = new Image();
+
+			$(imgObj).on('load error', function(){
+				if(count >= len) {
+
+				}else{
+					load();
+				}
+				count++;
+			});
+
+			imgObj.src = imgs[count];
+		}*/
+
+		$.preload(imgs, {
+			order: 'ordered'
+		});
+
+		$('.btn').on('click', function(){
+			if($(this).data('control') === 'prev'){
+				/*index--;
+				if(index < 0) {
+					index = 0;
+				}*/
+				index = Math.max(0, --index);
+			}else{
+				index = Math.min(len - 1, ++index);
+			}
+			document.title = (index + 1) + '/' + len;
+				$('#img').attr('src', imgs[index]);
+		})
+
+	</script>
+
+</body>
+</html>
